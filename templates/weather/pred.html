@@ -1,22 +1,154 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
     <title>Weather Prediction</title>
+    <style>
+        body {
+            text-align: center;
+            margin-bottom: 50px;
+            overflow: hidden; /* 화면 넘치는 부분 가리기 */
+        }
+
+        h1 {
+            font-family: 'Roboto', sans-serif;
+            font-size: 4em;
+            color: #146c43;
+        }
+
+        .body-container {
+            position: relative;
+            margin-top: 20px;
+            overflow: hidden; /* 화면 넘치는 부분 가리기 */
+        }
+
+        .body-image {
+            width: 100vw; /* 뷰포트 너비로 확장 */
+            height: 100vh; /* 뷰포트 높이로 확장 */
+            margin-top: 10px;
+            object-fit: cover; /* 가로 세로 비율 유지하면서 이미지 맞추기 */
+        }
+        .top-right-button {
+            position: fixed;
+            right: 20px;
+            top: 20px;
+            z-index: 2; /* 필요에 따라 z-index 조정 */
+        }
+        .search-container {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 1;
+        }
+
+        input[type="text"] {
+            padding: 10px;
+            font-size: 1em;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            width: 300px; /* 원하는 너비로 조절 */
+        }
+
+        button {
+            padding: 15px 30px;
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #fff;
+            background-color: #4CAF50;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #4CAF50;
+        }
+        .top-left-button {
+            position: fixed;
+            left: 20px;
+            top: 20px;
+            z-index: 2; /* 필요에 따라 z-index 조정 */
+        }
+
+.top-left-button button {
+    /* 버튼 스타일링 */
+}
+        .footer-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            background-color: #fff;
+            padding: 20px;
+            font-size: 1.5em;
+            color: #000000;
+            font-family: 'Roboto', sans-serif;
+        }
+
+        .footer-image {
+            width: 30px;
+            height: 30px;
+            margin-right: 20px;
+        }
+
+        footer {
+            margin-top: 5px;
+            font-family: 'Roboto', sans-serif;
+        }
+    </style>
+
+    <script>
+    </script>
 </head>
 <body>
-    <h1>Weather Prediction</h1>
-    <div>
-        {% for data in weather_data %}
-            <!-- 날씨 데이터 표시 -->
-            <p>{{ data }}</p>
-        {% endfor %}
+
+    <div class="top-right-button">
+        <a href="/weather/list/">
+            <button type="button">location list</button>
+        </a>
     </div>
 
-    <!-- 버튼을 클릭하면 get_sun_predictions URL로 이동 -->
-    <form action="/weather/get_sun_predictions/" method="get">
-        <button type="submit">Get Sun Predictions</button>
-    </form>
+    <div class="top-left-button">
+        <a href="/weather/introduce/">
+            <button type="button">Introduce</button>
+        </a>
+    </div>
 
+
+    <h1>Solar Plant Prediction</h1>
+    <div class="body-container">
+        {% for data in weather_data %}
+            <p>{{ data }}</p>
+        {% endfor %}
+
+        <!-- 바디 이미지 삽입 -->
+        <video class="body-image" autoplay muted loop controls>
+            <source src="{% static 'Solar_video.mp4' %}" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
+
+        <!-- 검색창 추가 -->
+        <div class="search-container">
+            <form action="/weather/get_sun_predictions/" method="get">
+                <input type="text" id="search-input" name="search-input" placeholder="조사할 동네의 동이름을 입력하세요">
+                <button type="submit">Get Sun Predictions</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- 이미지와 푸터를 같은 부모 요소로 감싸기 -->
+    <div class="footer-container">
+        <!-- 이미지 삽입 -->
+        <img class="footer-image" src="{% static 'konkuk.png' %}" alt="Footer Image">
+
+        <!-- 하단 푸터 -->
+        <footer>
+            Konkuk Univ.
+        </footer>
+    </div>
 </body>
 </html>

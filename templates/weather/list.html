@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>dong list</title>
+    <style>
+    body {
+        font-family: Arial, sans-serif;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    th, td {
+        border: 1px solid #ddd;
+        padding: 8px;
+        text-align: left;
+    }
+
+    th {
+        background-color: #4CAF50;
+        color: white;
+    }
+
+    tr:nth-child(even) {
+        background-color: #f2f2f2;
+    }
+
+    tr:hover {
+        background-color: #ddd;
+    }
+
+    .top-left-button {
+        position: absolute;
+        top: 10px;
+        left: 10px;
+    }
+    /* 기존 스타일 정의 */
+
+    /* 테이블의 행에 마우스를 올렸을 때 포인터 변경 */
+    #data-table tr:hover {
+        cursor: pointer;
+    }
+</style>
+</style>
+
+        <!-- 메인 화면으로 돌아가기 버튼 -->
+    <a href="/" style="text-decoration: none;">
+        <button type="button">Main Page</button>
+    </a>
+</head>
+<body>
+    <h1>Table Data</h1>
+
+    <!-- HTML 테이블을 표시 -->
+    <div>
+        {{ html_table|safe }}
+    </div>
+    <!-- 클릭 이벤트 처리를 위한 자바스크립트 -->
+    <script>
+    document.getElementById('data-table').addEventListener('click', function(e) {
+        var target = e.target;
+        while (target && target.nodeName !== 'TR') {
+            target = target.parentElement;
+        }
+        if (target && target.rowIndex > 0) {  // 첫 번째 행 (헤더)를 제외하고 처리
+            var dongName = target.cells[2].textContent; // '3단계' 열의 값
+            if (dongName && dongName !== 'NaN') {
+                window.location.href = '/weather/get_sun_predictions/?search-input=' + dongName;
+            }
+        }
+    });
+    </script>
+
+
+</body>
+</html>
+
+

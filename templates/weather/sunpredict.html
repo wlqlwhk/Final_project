@@ -1,0 +1,28 @@
+<!-- templates/weather/sunpredict.html -->
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <!-- head 내용 -->
+</head>
+<body>
+    <h1>Sun Prediction</h1>
+
+    <!-- 이미지 데이터를 표시 -->
+    {% if image_base64 %}
+        <img src="data:image/png;base64,{{ image_base64 }}" alt="Sun Prediction">
+    {% else %}
+        <p>No image available.</p>
+    {% endif %}
+
+    <!-- 메인 화면으로 돌아가기 버튼 -->
+    <a href="/" style="text-decoration: none;">
+        <button type="button">Main Page</button>
+    </a>
+
+    <form action="/weather/get_sun_predictions/" method="get">
+        <input type="text" name="search-input" placeholder="조사할 동네의 동이름을 입력하세요">
+        <button type="submit">검색</button>
+    </form>
+    <!-- 기타 내용 -->
+</body>
+</html>
