@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>Weather Prediction</title>
+</head>
+<body>
+    <h1>Weather Prediction</h1>
+    <div>
+        {% for data in weather_data %}
+            <!-- 날씨 데이터 표시 -->
+            <p>{{ data }}</p>
+        {% endfor %}
+    </div>
+
+    <!-- 버튼을 클릭하면 get_sun_predictions URL로 이동 -->
+    <form action="/weather/get_sun_predictions/" method="get">
+        <button type="submit">Get Sun Predictions</button>
+    </form>
+
+</body>
+</html>
