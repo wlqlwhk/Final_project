@@ -32,16 +32,17 @@ def Weather_Data():
 
     filtered_data = []  # 필요한 데이터만 추출
     exclude_categories = {'TMN', 'TMX', 'UUU', 'VVV', 'WAV', 'POP', 'PTY' }  # 제외할 데이터 목록
-    exclude_date = {next2_date_str, next3_date_str, }
+    exclude_date = {next2_date_str, next3_date_str, current_date_str}
+    # exclude_time = {'0000','0100','0200','0300','0400','0500','1900','2000','2100', '2200', '2300'}
     # 응답 데이터의 'response' -> 'body' -> 'items' -> 'item' 에서 각각의 아이템을 가져옴
     items = original_data['response']['body']['items']['item']
 
     # 데이터 전처리
     for item in items:
-        if item.get('category') not in exclude_categories:
-            if item.get('fcstDate') not in exclude_date:
-                fcst_value = item.get('fcstValue')
-                filtered_data.append(item)
+            if item.get('category') not in exclude_categories:
+                if item.get('fcstDate') not in exclude_date:
+                    fcst_value = item.get('fcstValue')
+                    filtered_data.append(item)
 
     filtered_data = pd.DataFrame(filtered_data)
     delete_columns = ['baseDate', 'baseTime', 'nx', 'ny']
@@ -67,4 +68,4 @@ def Weather_Data():
     weather_data.wind_speed =weather_data.wind_speed.multiply(1000)
     weather_data.snow =weather_data.snow.multiply(0.01)
     weather_data['cloud'] = weather_data['cloud'].replace(value_mapping)
-    return weather_data
+    return weather_data, filtered_data

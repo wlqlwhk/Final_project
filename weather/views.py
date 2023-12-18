@@ -1,5 +1,7 @@
 # views.py
 import base64
+
+import numpy as np
 from django.http import JsonResponse, HttpResponse
 from django.shortcuts import render
 from django.template import context
@@ -11,9 +13,6 @@ import requests
 import json
 import datetime
 import io
-from django.views.decorators.csrf import csrf_exempt
-
-
 
 
 #   데이터 전처리 완료
@@ -47,15 +46,15 @@ def fetch_weather_data(nx,ny):
 
     filtered_data = []  # 필요한 데이터만 추출
     exclude_categories = {'TMN', 'TMX', 'UUU', 'VVV', 'WAV', 'POP', 'PTY' }  # 제외할 데이터 목록
-    exclude_date = {next2_date_str, next3_date_str, }
+    exclude_date = {next2_date_str, next3_date_str, current_date_str, }
     # 응답 데이터의 'response' -> 'body' -> 'items' -> 'item' 에서 각각의 아이템을 가져옴
     items = original_data['response']['body']['items']['item']
 
     for item in items:
-        if item.get('category') not in exclude_categories:
-            if item.get('fcstDate') not in exclude_date:
-                fcst_value = item.get('fcstValue')
-                filtered_data.append(item)
+            if item.get('category') not in exclude_categories:
+                if item.get('fcstDate') not in exclude_date:
+                    fcst_value = item.get('fcstValue')
+                    filtered_data.append(item)
 
     filtered_data = pd.DataFrame(filtered_data)
     delete_columns = ['baseDate', 'baseTime', 'nx', 'ny']
@@ -101,7 +100,8 @@ def get_sun_predictions(request):
 
     loaded_model = load_model("pred_model.h5")
     predictions = loaded_model.predict(test_x_reshaped)
-
+    predictions[predictions<0] = 0
+    predictions[18:24] = 0
     a = predictions
 
     #스타일
@@ -109,9 +109,9 @@ def get_sun_predictions(request):
     plt.figure(figsize=(14, 6))
     plt.plot(a, color='limegreen', label='Amount',marker='o', linestyle='--')  # 색상과 레이블 변경
     plt.title('Sun Prediction Amount Over Time')  # 타이틀 추가
-    plt.ylabel('pred amount')  # y축 레이블 추가
+    plt.xlabel('Time')
+    plt.ylabel('Pred Amount')
     plt.grid(True)  # 그리드 추가
-    # plt.tight_layout()  # 레이아웃 조정
 
 
     # 버퍼 생성 및 그래프 저장
@@ -127,10 +127,6 @@ def get_sun_predictions(request):
 
     # HTML 템플릿에 컨텍스트 전달
     return render(request, 'weather/sunpredict.html', context)
-    # 버퍼의 내용을 HTTP 응답으로 반환
-    #return HttpResponse(buf.getvalue(), content_type='image/png')
-
-    #return render(request, 'weather/sunpredict.html')
 
 def index(request):
     # 여기에 날씨 데이터 넣으면 날씨 정보도 볼 수 있음
